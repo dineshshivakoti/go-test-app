@@ -1,5 +1,5 @@
 FROM alpine:3.16 as root-certs
-RUN apk add -U --no-cache ca-certificates
+RUN apk add --no-cache ca-certificates
 RUN addgroup -g 1001 app
 RUN adduser app -u 1001 -D -G app /home/app
 
