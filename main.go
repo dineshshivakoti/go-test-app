@@ -31,7 +31,7 @@ func display(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/", display)
-	fmt.Printf("Starting server at port 8081\n")
+	fmt.Printf("Starting server at port 8081.\n")
 	if err := http.ListenAndServe(":8081", nil); err != nil {
 		log.Fatal(err)
 	}
