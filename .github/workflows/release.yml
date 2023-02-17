@@ -1,39 +1,38 @@
-name: release
+name: ci
 on:
-  workflow_dispatch:
-    inputs:
-      gittag:
-        description: 'Release new git tag'
-        required: true
-        type: string
-      commit_msg:
-        description: 'Commit message'
-        required: true
-        type: string
-permissions:
-  contents: write
-env:
-  GITTAG: ${{ inputs.gittag }}
-  COMMIT_MESSAGE: ${{ inputs.commit_msg }}
-  IMAGE: dinesh5107/go-test-app
+  push:
+    tags:
+    - '*'
 jobs:
-  release:
-    runs-on: ['ubuntu-latest']
+  build:
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      IMAGE: dinesh5107/go-test-app
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout faust
+    - name: Checkout
       uses: actions/checkout@v3
-    - uses: fregante/setup-git-user@v1
-    - name: Push tag
-      run: |
-        echo " Tag = " $GITTAG "COMMIT_MESSAGE = " $COMMIT_MESSAGE
-        git add -u
-        git tag -a $GITTAG -m "$COMMIT_MESSAGE"
-        git push --tags
+    - uses: brpaz/hadolint-action@v1.5.0
+    - name: Docker meta
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        # list of Docker images to use as base name for tags
+        images: |
+          ${{ env.IMAGE }}
+        # generate Docker tags based on the following events/attributes
+        tags: |
+          type=ref,event=tag
+        flavor: |
+          latest=false
     - name: Build and push
+      if: startsWith(github.ref, 'refs/tags/')
       id: build-push
       uses: docker/build-push-action@v4
       with:
         context: .
         push: ${{ github.event_name != 'pull_request' }}
-        tags: $GITTAG
-        
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
