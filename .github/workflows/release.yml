@@ -18,7 +18,12 @@ env:
 
 jobs:
   git-tag:
-    runs-on: ['ubuntu-latest']
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      IMAGE: dinesh5107/go-test-app
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout
       uses: actions/checkout@v3
@@ -29,16 +34,6 @@ jobs:
         git add -u
         git tag -a $GITTAG -m "$COMMIT_MESSAGE"
         git push --tags
-  build:
-    permissions:
-      id-token: write
-      contents: read
-    env:
-      IMAGE: dinesh5107/go-test-app
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v3
     - uses: brpaz/hadolint-action@v1.5.0
     - name: Docker meta
       id: meta
