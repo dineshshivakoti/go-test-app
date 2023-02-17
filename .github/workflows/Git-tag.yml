@@ -1,0 +1,31 @@
+name: Git-tag
+on:
+  workflow_dispatch:
+    inputs:
+      gittag:
+        description: 'Release new git tag'
+        required: true
+        type: string
+      commit_msg:
+        description: 'Commit message'
+        required: true
+        type: string
+permissions:
+  contents: write
+env:
+  GITTAG: ${{ inputs.gittag }}
+  COMMIT_MESSAGE: ${{ inputs.commit_msg }}
+
+jobs:
+  release:
+    runs-on: ['ubuntu-latest']
+    steps:
+    - name: Checkout faust
+      uses: actions/checkout@v3
+    - uses: fregante/setup-git-user@v1
+    - name: Push tag
+      run: |
+        echo " Tag = " $GITTAG "COMMIT_MESSAGE = " $COMMIT_MESSAGE
+        git add -u
+        git tag -a $GITTAG -m "$COMMIT_MESSAGE"
+        git push --tags
