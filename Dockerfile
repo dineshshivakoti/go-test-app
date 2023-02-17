@@ -1,14 +1,14 @@
 FROM alpine:3.16 as root-certs
-RUN apk --no-cache upgrade && apk --no-cache add ca-certificates
-RUN addgroup -g 1001 app
-RUN adduser app -u 1001 -D -G app /home/app
+#RUN apk --no-cache add ca-certificates
+#RUN addgroup -g 1001 app
+#RUN adduser app -u 1001 -D -G app /home/app
 
 # # specify the base image for GO app
 FROM golang:1.17 as builder
 # # Create /app dir within the image to hold our application source code.
 WORKDIR /home/app
 # # copy root certificate from previous build 
-COPY --from=root-certs  /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs
+#COPY --from=root-certs  /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs
 # # copy GO mod into WORKDIR
 COPY go.mod .
 # # install dependencies
