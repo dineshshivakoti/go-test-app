@@ -19,6 +19,5 @@ COPY main.go .
 #RUN go build -o /go-test-app
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o /go-test-app
 # # tell docker to listen on the port at runtime
-EXPOSE 8081
 # # command to be used to execute when image is used to start the container.
 ENTRYPOINT ["/go-test-app"]
