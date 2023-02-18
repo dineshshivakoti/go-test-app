@@ -5,6 +5,7 @@ import (
 	"io"
 	"log"
 	"io/ioutil"
+	"os"
 	"encoding/json"
 )
 
@@ -26,6 +27,12 @@ func display(w http.ResponseWriter, r *http.Request) {
 		author := fmt.Sprint(res["author"])
 		messiah_age := content + " - "+author + "\n"
 		io.WriteString(w,messiah_age)
+
+		log.Printf("Serving request: %s", r.URL.Path)
+		host, _ := os.Hostname()
+		log.Printf("From Hostname: %s\n", host)
+		fmt.Fprint(w, "\n\n")
+		fmt.Fprintf(w, "From Hostname: %s\n", host)
 	}
 }
 
